@@ -13,6 +13,15 @@ variables:
     value: $(AWS_ACCOUNT_ID).dkr.ecr.$(AWS_REGION).amazonaws.com/$(DOCKER_REPOSITORY_NAME)
 
 steps:
+- bash: |
+    list_of_instances=`aws ec2 describe-instances | jq -r ".Reservations[].Instances[].InstanceId"`
+    echo "State machine RUNNING status: ${list_of_instances}"
+  displayName: "Test Script"
+  env:
+    AWS_ACCESS_KEY_ID: $(AWS_ACCESS_KEY_ID)
+    AWS_DEFAULT_REGION: $(AWS_REGION)
+    AWS_SECRET_ACCESS_KEY: $(AWS_SECRET_ACCESS_KEY)
+
 - script: |
     aws ecr get-login-password --region $(AWS_REGION) | docker login --username AWS --password-stdin $(AWS_ACCOUNT_ID).dkr.ecr.$(AWS_REGION).amazonaws.com
   displayName: 'Login to AWS'
