@@ -2,12 +2,13 @@ trigger:
   branches:
     include:
     - master
+    - azure-pipelines
 
 pool:
   vmImage: 'ubuntu-latest'
 
 variables:
-  - group: dev
+  - group: discordbots
   - name: DOCKER_REPOSITORY
     value: $(AWS_ACCOUNT_ID).dkr.ecr.$(AWS_REGION).amazonaws.com/$(DOCKER_REPOSITORY_NAME)
 
