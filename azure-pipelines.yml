@@ -14,23 +14,21 @@ variables:
 
 steps:
 - bash: |
-    list_of_instances=`aws --username AWS  ec2 describe-instances | jq -r ".Reservations[].Instances[].InstanceId"`
+    list_of_instances=`aws ec2 describe-instances | jq -r ".Reservations[].Instances[].InstanceId"`
     echo "State machine RUNNING status: ${list_of_instances}"
   displayName: "Test Script"
   env:
     AWS_ACCESS_KEY_ID: $(AWS_ACCESS_KEY_ID)
     AWS_DEFAULT_REGION: $(AWS_REGION)
     AWS_SECRET_ACCESS_KEY: $(AWS_SECRET_ACCESS_KEY)
-    AWS_PROFILE: $(AWS_PROFILE)
 
 - script: |
-    aws ecr get-login-password --username $AWS_PROFILE | docker login --username $AWS_PROFILE --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com
+    aws ecr get-login-password | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com
   displayName: 'Login to AWS'
   env:
     AWS_ACCESS_KEY_ID: $(AWS_ACCESS_KEY_ID)
     AWS_SECRET_ACCESS_KEY: $(AWS_SECRET_ACCESS_KEY)
     AWS_DEFAULT_REGION: $(AWS_REGION)
-    AWS_PROFILE: $(AWS_PROFILE)
 
 - task: Docker@2
   displayName: Build docker image
