@@ -38,3 +38,4 @@ steps:
     Dockerfile: Dockerfile
     tags: |
       latest
+      v1
